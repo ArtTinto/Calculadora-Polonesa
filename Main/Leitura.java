@@ -43,4 +43,24 @@ public class Leitura {
             }
         }
     }
+
+        public void validarParenteses(char[] expressao) throws ExpressaoInvalidaException {
+        Pilha pilhaDeParenteses = new Pilha(expressao.length);
+        for (int i = 0; i < expressao.length; i++) {
+            char caractere = expressao[i];
+            if (caractere == '(') {
+                pilhaDeParenteses.push(String.valueOf(caractere));
+            }
+            if (caractere == ')') {
+                if (pilhaDeParenteses.isEmpty()) {
+                    throw new ExpressaoInvalidaException("Parêntese de fechamento sem abertura "
+                            + "correspondente na posição " + (i + 1) + ".");
+                }
+                pilhaDeParenteses.pop();
+            }
+        }
+        if (!pilhaDeParenteses.isEmpty()) {
+            throw new ExpressaoInvalidaException("Existe parêntese de abertura sem fechamento.");
+        }
+    }
 }
