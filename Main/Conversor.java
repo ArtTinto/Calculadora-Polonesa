@@ -1,5 +1,4 @@
 public class Conversor {
-
     private final Operador regrasDosOperadores;
     private Pilha pilhaDeOperadores;
     private String[] saida;
@@ -55,3 +54,26 @@ public class Conversor {
         }
         pilhaDeOperadores.pop();
     }
+    
+    private void processarOperador(char operadorLido) {
+        while (!pilhaDeOperadores.isEmpty()
+                && regrasDosOperadores.deveDesempilhar(operadorLido, consultarSimboloDoTopo())) {
+            adicionarNaSaida(pilhaDeOperadores.pop());
+        }
+        pilhaDeOperadores.push(String.valueOf(operadorLido));
+    }
+ 
+    private void esvaziarPilhaNaSaida() {
+        while (!pilhaDeOperadores.isEmpty()) {
+            adicionarNaSaida(pilhaDeOperadores.pop());
+        }
+    }
+ 
+    private String[] copiarSaida() {
+        String[] expressaoPosfixa = new String[tamanhoDaSaida];
+        for (int i = 0; i < tamanhoDaSaida; i++) {
+            expressaoPosfixa[i] = saida[i];
+        }
+        return expressaoPosfixa;
+    }
+}
