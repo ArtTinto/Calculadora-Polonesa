@@ -1,8 +1,6 @@
-// M1 – Arquivo base do projeto
-
 public class Operador {
 
-    // ===== INÍCIO M7 – Operador: precedência e associatividade =====
+
     public boolean ehOperando(char simbolo) {
         return simbolo >= '0' && simbolo <= '9';
     }
@@ -45,5 +43,5 @@ public class Operador {
         }
         return false;
     }
-    // ===== FIM M7 =====
+
 }
