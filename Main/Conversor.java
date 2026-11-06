@@ -15,7 +15,7 @@ public class Conversor {
 
         for (int i = 0; i < expressaoInfixa.length; i++) {
             char simbolo = expressaoInfixa[i];
-            if (regrasDosOperadores.ehOperando(simbolo)) {
+            if (regrasDosOperadores.isOperando(simbolo)) {
                 processarOperando(simbolo);
             } else if (simbolo == '(') {
                 processarAberturaDeParenteses();
@@ -36,7 +36,7 @@ public class Conversor {
     }
 
     // Lê o topo da pilha como caractere, para poder comparar com as regras dos operadores.
-    private char consultarSimboloDoTopo() {
+    private char getSimboloDoTopo() {
         return pilhaDeOperadores.peek().charAt(0);
     }
 
@@ -49,26 +49,26 @@ public class Conversor {
     }
 
     private void processarFechamentoDeParenteses() {
-        while (consultarSimboloDoTopo() != '(') {
+        while (getSimboloDoTopo() != '(') {
             adicionarNaSaida(pilhaDeOperadores.pop());
         }
         pilhaDeOperadores.pop();
     }
-    
+
     private void processarOperador(char operadorLido) {
         while (!pilhaDeOperadores.isEmpty()
-                && regrasDosOperadores.deveDesempilhar(operadorLido, consultarSimboloDoTopo())) {
+                && regrasDosOperadores.deveDesempilhar(operadorLido, getSimboloDoTopo())) {
             adicionarNaSaida(pilhaDeOperadores.pop());
         }
         pilhaDeOperadores.push(String.valueOf(operadorLido));
     }
- 
+
     private void esvaziarPilhaNaSaida() {
         while (!pilhaDeOperadores.isEmpty()) {
             adicionarNaSaida(pilhaDeOperadores.pop());
         }
     }
- 
+
     private String[] copiarSaida() {
         String[] expressaoPosfixa = new String[tamanhoDaSaida];
         for (int i = 0; i < tamanhoDaSaida; i++) {
