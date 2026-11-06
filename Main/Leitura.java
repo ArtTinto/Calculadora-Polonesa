@@ -1,16 +1,13 @@
-// M1 – Arquivo base do projeto
-
 public class Leitura {
-
     private final Operador regrasDosOperadores;
 
     public Leitura() {
         regrasDosOperadores = new Operador();
     }
 
-    // ===== INÍCIO M4 – Leitura: limpar e filtrar a entrada =====
     public char[] limparEntrada(String textoDigitado) throws ExpressaoInvalidaException {
         int quantidadeSemEspacos = 0;
+        
         for (int i = 0; i < textoDigitado.length(); i++) {
             if (!Character.isWhitespace(textoDigitado.charAt(i))) {
                 quantidadeSemEspacos = quantidadeSemEspacos + 1;
@@ -19,8 +16,10 @@ public class Leitura {
 
         char[] expressao = new char[quantidadeSemEspacos];
         int posicaoNaExpressao = 0;
+        
         for (int i = 0; i < textoDigitado.length(); i++) {
             char caractere = textoDigitado.charAt(i);
+            
             if (!Character.isWhitespace(caractere)) {
                 expressao[posicaoNaExpressao] = caractere;
                 posicaoNaExpressao = posicaoNaExpressao + 1;
@@ -35,25 +34,32 @@ public class Leitura {
         if (expressao.length == 0) {
             throw new ExpressaoInvalidaException("A expressão está vazia.");
         }
+        
         for (int i = 0; i < expressao.length; i++) {
             char caractere = expressao[i];
-            boolean caractereValido = regrasDosOperadores.ehOperando(caractere)
-                    || regrasDosOperadores.ehOperador(caractere)
+            boolean caractereValido = regrasDosOperadores.isOperando(caractere)
+                    || regrasDosOperadores.isOperador(caractere)
                     || caractere == '('
                     || caractere == ')';
+            
+            if (caractere == '.' || caractere == ',') {
+                throw new ExpressaoInvalidaException("Só são aceitos números inteiros de 0 a 9, "
+                        + "sem vírgula ou ponto (posição " + (i + 1) + ").");
+            }
+            
             if (!caractereValido) {
                 throw new ExpressaoInvalidaException("Caractere inválido '" + caractere
                         + "' na posição " + (i + 1) + " (contando sem os espaços).");
             }
         }
     }
-    // ===== FIM M4 =====
 
-    // ===== INÍCIO M5 – Leitura: validar parênteses =====
     public void validarParenteses(char[] expressao) throws ExpressaoInvalidaException {
         Pilha pilhaDeParenteses = new Pilha(expressao.length);
+        
         for (int i = 0; i < expressao.length; i++) {
             char caractere = expressao[i];
+            
             if (caractere == '(') {
                 pilhaDeParenteses.push(String.valueOf(caractere));
             }
@@ -65,15 +71,12 @@ public class Leitura {
                 pilhaDeParenteses.pop();
             }
         }
+        
         if (!pilhaDeParenteses.isEmpty()) {
             throw new ExpressaoInvalidaException("Existe parêntese de abertura sem fechamento.");
         }
     }
-    // ===== FIM M5 =====
 
-    // ===== INÍCIO M6 – Leitura: validar a sequência da expressão =====
-    // Regra: em cada ponto a expressão espera um operando (ou '(') ou espera
-    // um operador (ou ')'). Qualquer símbolo fora do esperado é erro.
     public void validarSequencia(char[] expressao) throws ExpressaoInvalidaException {
         boolean esperaOperando = true;
 
@@ -81,7 +84,11 @@ public class Leitura {
             char caractere = expressao[i];
             int posicao = i + 1;
 
-            if (regrasDosOperadores.ehOperando(caractere)) {
+            if (regrasDosOperadores.isOperando(caractere)) {
+                if (!esperaOperando && regrasDosOperadores.isOperando(expressao[i - 1])) {
+                    throw new ExpressaoInvalidaException("Só são aceitos números de 1 dígito (0 a 9): "
+                            + "o número da posição " + (i + 1) + " tem mais de um dígito.");
+                }
                 if (!esperaOperando) {
                     throw new ExpressaoInvalidaException("Operando fora de posição: '" + caractere
                             + "' na posição " + posicao + ".");
@@ -103,7 +110,7 @@ public class Leitura {
                 }
             }
 
-            if (regrasDosOperadores.ehOperador(caractere)) {
+            if (regrasDosOperadores.isOperador(caractere)) {
                 if (esperaOperando) {
                     throw new ExpressaoInvalidaException("Operador fora de posição: '" + caractere
                             + "' na posição " + posicao + ".");
@@ -124,5 +131,4 @@ public class Leitura {
         validarSequencia(expressao);
         return expressao;
     }
-    // ===== FIM M6 =====
 }
