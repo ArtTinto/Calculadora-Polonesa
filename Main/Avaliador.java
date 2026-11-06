@@ -66,4 +66,22 @@ public class Avaliador {
         
         return resultado;
     }
+
+     public double avaliar(String[] expressaoPosfixa) throws ExpressaoInvalidaException {
+        Pilha pilhaDeValores = new Pilha(expressaoPosfixa.length);
+ 
+        for (int i = 0; i < expressaoPosfixa.length; i++) {
+            String simbolo = expressaoPosfixa[i];
+            char primeiroCaractere = simbolo.charAt(0);
+            if (regrasDosOperadores.isOperando(primeiroCaractere)) {
+                pilhaDeValores.push(simbolo);
+            } else {
+                double valorDireito = Double.parseDouble(pilhaDeValores.pop());
+                double valorEsquerdo = Double.parseDouble(pilhaDeValores.pop());
+                double resultadoParcial = executarOperacao(valorEsquerdo, valorDireito, primeiroCaractere);
+                pilhaDeValores.push(String.valueOf(resultadoParcial));
+            }
+        }
+        return Double.parseDouble(pilhaDeValores.pop());
+    }
 }
