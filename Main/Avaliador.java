@@ -5,47 +5,48 @@ public class Avaliador {
         regrasDosOperadores = new Operador();
     }
 
-    public double executarOperacao(double valorEsquerdo, double valorDireito, char operador)
+    public double executarOperacao(double valorEsquerdo, double valorDireito, char simboloDoOperador)
             throws ExpressaoInvalidaException {
-        if (operador == '+') {
+        if (simboloDoOperador == '+') {
             return valorEsquerdo + valorDireito;
         }
-        if (operador == '-') {
+        if (simboloDoOperador == '-') {
             return valorEsquerdo - valorDireito;
         }
-        if (operador == '*') {
+        if (simboloDoOperador == '*') {
             return valorEsquerdo * valorDireito;
         }
-        if (operador == '/') {
+        if (simboloDoOperador == '/') {
             return dividir(valorEsquerdo, valorDireito);
         }
-        if (operador == '^') {
+        if (simboloDoOperador == '^') {
             return calcularPotencia(valorEsquerdo, valorDireito);
         }
-        throw new ExpressaoInvalidaException("Operador Desconhecido" + operador);
+        throw new ExpressaoInvalidaException("Operador desconhecido: " + simboloDoOperador);
     }
 
-    private double calcularPotencia(double base, double expoente) {
-        // Verifica o expoente;
+    // Exponenciação por quadrados sucessivos (rápida). Expoente zero devolve 1.
+    private double calcularPotencia(double base, double expoente) throws ExpressaoInvalidaException {
         if (expoente == 0) {
             return 1;
         }
         if (base == 0 && expoente < 0) {
-            throw new ArithmeticException("Divisão por zero");
+            throw new ExpressaoInvalidaException("Divisão por zero (zero elevado a expoente negativo).");
         }
 
         double resultado;
         if (expoente == Math.floor(expoente)) {
             resultado = calcularPotenciaInteira(base, (long) Math.abs(expoente));
-
-            if (expoente < 0) // Caso expoente negativo
-                resultado = 1 / expoente;
-            else
-                resultado = Math.pow(base, expoente);
-
-            if (Double.isNaN(resultado) || Double.isInfinite(resultado)) {
-                throw new ExpressaoInvalidaException("Valor não pode ser calculado");
+            if (expoente < 0) {
+                resultado = 1 / resultado;
             }
+        } else {
+            resultado = Math.pow(base, expoente);
+        }
+
+        if (Double.isNaN(resultado) || Double.isInfinite(resultado)) {
+            throw new ExpressaoInvalidaException("O resultado da exponenciação não pôde ser calculado "
+                    + "(valor indefinido ou grande demais).");
         }
         return resultado;
     }
@@ -54,25 +55,23 @@ public class Avaliador {
         double resultado = 1;
         double baseAtual = base;
         long expoenteRestante = expoente;
-
         while (expoenteRestante > 0) {
             if (expoenteRestante % 2 == 1) {
-                resultado *= baseAtual;
+                resultado = resultado * baseAtual;
             }
-
-            baseAtual *= baseAtual;
-            expoenteRestante /= 2;
+            baseAtual = baseAtual * baseAtual;
+            expoenteRestante = expoenteRestante / 2;
         }
-        
         return resultado;
     }
 
-     public double avaliar(String[] expressaoPosfixa) throws ExpressaoInvalidaException {
+    public double avaliar(String[] expressaoPosfixa) throws ExpressaoInvalidaException {
         Pilha pilhaDeValores = new Pilha(expressaoPosfixa.length);
- 
+
         for (int i = 0; i < expressaoPosfixa.length; i++) {
             String simbolo = expressaoPosfixa[i];
             char primeiroCaractere = simbolo.charAt(0);
+            
             if (regrasDosOperadores.isOperando(primeiroCaractere)) {
                 pilhaDeValores.push(simbolo);
             } else {
@@ -83,5 +82,21 @@ public class Avaliador {
             }
         }
         return Double.parseDouble(pilhaDeValores.pop());
+    }
+
+    private double dividir(double dividendo, double divisor) throws ExpressaoInvalidaException {
+        if (divisor == 0) {
+            throw new ArithmeticException("Divisão por zero.");
+        }
+        return dividendo / divisor;
+    }
+
+    // Se o resultado for um número inteiro, mostra sem casas decimais (ex.: 9 e não 9.0).
+    public String formatarResultado(double resultado) {
+        if (resultado == Math.floor(resultado) && Math.abs(resultado) < 1e15) {
+            long resultadoInteiro = (long) resultado;
+            return String.valueOf(resultadoInteiro);
+        }
+        return String.valueOf(resultado);
     }
 }
