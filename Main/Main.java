@@ -37,4 +37,19 @@ public class Main{
         System.out.print("Escolha: ");
     }
   }
+  private String lerExpressao() {
+        System.out.println("Use números de um algarismo, + - * / ^ e parênteses.");
+        System.out.print("Digite a expressão: ");
+        return scanner.nextLine();
+    }
+ 
+    private void avaliarNovaExpressao() {
+        String textoDigitado = lerExpressao();
+        try {
+            controle.processarExpressao(textoDigitado);
+            exibirResultado();
+        } catch (ExpressaoInvalidaException erro) {
+            exibirMensagemDeErro(erro);
+        }
+    }
 }
