@@ -52,4 +52,12 @@ public class Main{
             exibirMensagemDeErro(erro);
         }
     }
+      private void exibirResultado() {
+        System.out.println("Forma pós-fixa: " + controle.getExpressaoPosfixa());
+        System.out.println("Resultado: " + controle.getResultadoFormatado());
+    }
+
+    private void exibirMensagemDeErro(ExpressaoInvalidaException erro) {
+        System.out.println("Erro: " + erro.getMessage());
+    }
 }
