@@ -27,4 +27,20 @@ public class Controle {
 
     public String getResultadoFormatado() {
         return avaliador.formatarResultado(resultado);
+    }
+
+    private void executarEtapas(String textoDigitado) throws ExpressaoInvalidaException {
+        expressaoInfixa = leitura.lerExpressao(textoDigitado);
+        expressaoPosfixa = conversor.converter(expressaoInfixa);
+        resultado = avaliador.avaliar(expressaoPosfixa);
+    }
+
+    public void processarExpressao(String textoDigitado) throws ExpressaoInvalidaException {
+        try {
+            executarEtapas(textoDigitado);
+        } catch (IllegalStateException erroDaPilha) {
+            throw new ExpressaoInvalidaException("Expressão inconsistente: " + erroDaPilha.getMessage());
+        }
+    }
+    // ===== FIM C3 =====
 }
