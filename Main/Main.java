@@ -1,16 +1,15 @@
 import java.util.Scanner;
- 
+
 public class Main {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Controle controle = new Controle();
- 
+        Controlador controle = new Controlador();
+
         executar(scanner, controle);
         scanner.close();
     }
- 
 
-    public static void executar(Scanner scanner, Controle controle) {
+    public static void executar(Scanner scanner, Controlador controle) {
         boolean continuar = true;
         while (continuar) {
             exibirMenu();
@@ -25,7 +24,7 @@ public class Main {
             }
         }
     }
- 
+
     private static void exibirMenu() {
         System.out.println();
         System.out.println("=== Avaliador de Expressões Matemáticas ===");
@@ -39,23 +38,24 @@ public class Main {
         System.out.print("Digite a expressão: ");
         return scanner.nextLine();
     }
- 
-    private static void avaliarNovaExpressao(Scanner scanner, Controle controle) {
+
+    private static void avaliarNovaExpressao(Scanner scanner, Controlador controle) {
         String textoDigitado = lerExpressao(scanner);
         try {
             controle.processarExpressao(textoDigitado);
             exibirResultado(controle);
-        } catch (ExpressaoInvalidaException erro) {
+        } catch (ExpressaoIncorretaException erro) {
             exibirMensagemDeErro(erro);
         }
     }
 
-    private static void exibirResultado(Controle controle) {
+    private static void exibirResultado(Controlador controle) {
+        System.out.println("Expressão: " + controle.getExpressaoInfixa());
         System.out.println("Forma pós-fixa: " + controle.getExpressaoPosfixa());
         System.out.println("Resultado: " + controle.getResultadoFormatado());
     }
 
-    private static void exibirMensagemDeErro(ExpressaoInvalidaException erro) {
+    private static void exibirMensagemDeErro(ExpressaoIncorretaException erro) {
         System.out.println("Erro: " + erro.getMessage());
     }
 }
