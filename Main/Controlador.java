@@ -35,6 +35,10 @@ public class Controlador {
         return texto;
     }
 
+    public String getResultadoFormatado() {
+        return calculador.formatarResultado(resultado);
+    }
+
     private void executarEtapas(String textoDigitado) throws ExpressaoIncorretaException {
         expressaoInfixa = leitor.lerExpressao(textoDigitado);
         expressaoPosfixa = conversor.converter(expressaoInfixa);
