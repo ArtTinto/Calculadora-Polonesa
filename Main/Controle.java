@@ -1,5 +1,4 @@
 public class Controle {
-
     private char[] expressaoInfixa;
     private String[] expressaoPosfixa;
     private double resultado;
@@ -42,5 +41,4 @@ public class Controle {
             throw new ExpressaoInvalidaException("Expressão inconsistente: " + erroDaPilha.getMessage());
         }
     }
-    // ===== FIM C3 =====
 }
