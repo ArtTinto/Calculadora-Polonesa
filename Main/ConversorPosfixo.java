@@ -1,11 +1,11 @@
-public class Conversor {
-    private final Operador regrasDosOperadores;
+public class ConversorPosfixo {
+    private final Operadores regrasDosOperadores;
     private Pilha pilhaDeOperadores;
     private String[] saida;
     private int tamanhoDaSaida;
 
-    public Conversor() {
-        regrasDosOperadores = new Operador();
+    public ConversorPosfixo() {
+        regrasDosOperadores = new Operadores();
     }
 
     public String[] converter(char[] expressaoInfixa) {
