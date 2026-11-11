@@ -1,12 +1,12 @@
-public class Avaliador {
-    private final Operador regrasDosOperadores;
+public class Calculador {
+    private final Operadores regrasDosOperadores;
 
-    public Avaliador() {
-        regrasDosOperadores = new Operador();
+    public Calculador() {
+        regrasDosOperadores = new Operadores();
     }
 
     public double executarOperacao(double valorEsquerdo, double valorDireito, char simboloDoOperador)
-            throws ExpressaoInvalidaException {
+            throws ExpressaoIncorretaException {
         if (simboloDoOperador == '+') {
             return valorEsquerdo + valorDireito;
         }
@@ -22,16 +22,15 @@ public class Avaliador {
         if (simboloDoOperador == '^') {
             return calcularPotencia(valorEsquerdo, valorDireito);
         }
-        throw new ExpressaoInvalidaException("Operador desconhecido: " + simboloDoOperador);
+        throw new ExpressaoIncorretaException("Operador desconhecido: " + simboloDoOperador);
     }
 
-    // Exponenciação por quadrados sucessivos (rápida). Expoente zero devolve 1.
-    private double calcularPotencia(double base, double expoente) throws ExpressaoInvalidaException {
+    private double calcularPotencia(double base, double expoente) throws ExpressaoIncorretaException {
         if (expoente == 0) {
             return 1;
         }
         if (base == 0 && expoente < 0) {
-            throw new ExpressaoInvalidaException("Divisão por zero (zero elevado a expoente negativo).");
+            throw new ExpressaoIncorretaException("Divisão por zero (zero elevado a expoente negativo).");
         }
 
         double resultado;
@@ -44,10 +43,6 @@ public class Avaliador {
             resultado = Math.pow(base, expoente);
         }
 
-        if (Double.isNaN(resultado) || Double.isInfinite(resultado)) {
-            throw new ExpressaoInvalidaException("O resultado da exponenciação não pôde ser calculado "
-                    + "(valor indefinido ou grande demais).");
-        }
         return resultado;
     }
 
@@ -65,13 +60,12 @@ public class Avaliador {
         return resultado;
     }
 
-    public double avaliar(String[] expressaoPosfixa) throws ExpressaoInvalidaException {
+    public double avaliar(String[] expressaoPosfixa) throws ExpressaoIncorretaException {
         Pilha pilhaDeValores = new Pilha(expressaoPosfixa.length);
 
         for (int i = 0; i < expressaoPosfixa.length; i++) {
             String simbolo = expressaoPosfixa[i];
             char primeiroCaractere = simbolo.charAt(0);
-            
             if (regrasDosOperadores.isOperando(primeiroCaractere)) {
                 pilhaDeValores.push(simbolo);
             } else {
@@ -84,9 +78,9 @@ public class Avaliador {
         return Double.parseDouble(pilhaDeValores.pop());
     }
 
-    private double dividir(double dividendo, double divisor) throws ExpressaoInvalidaException {
+    private double dividir(double dividendo, double divisor) throws ExpressaoIncorretaException {
         if (divisor == 0) {
-            throw new ArithmeticException("Divisão por zero.");
+            throw new ExpressaoIncorretaException("Divisão por zero.");
         }
         return dividendo / divisor;
     }
