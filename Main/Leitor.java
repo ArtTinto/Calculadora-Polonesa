@@ -1,11 +1,11 @@
-public class Leitura {
-    private final Operador regrasDosOperadores;
+public class Leitor {
+    private final Operadores regrasDosOperadores;
 
-    public Leitura() {
-        regrasDosOperadores = new Operador();
+    public Leitor() {
+        regrasDosOperadores = new Operadores();
     }
 
-    public char[] limparEntrada(String textoDigitado) throws ExpressaoInvalidaException {
+    public char[] limparEntrada(String textoDigitado) throws ExpressaoIncorretaException {
         int quantidadeSemEspacos = 0;
         
         for (int i = 0; i < textoDigitado.length(); i++) {
@@ -30,9 +30,9 @@ public class Leitura {
         return expressao;
     }
 
-    public void validarCaracteres(char[] expressao) throws ExpressaoInvalidaException {
+    public void validarCaracteres(char[] expressao) throws ExpressaoIncorretaException {
         if (expressao.length == 0) {
-            throw new ExpressaoInvalidaException("A expressão está vazia.");
+            throw new ExpressaoIncorretaException("A expressão está vazia.");
         }
         
         for (int i = 0; i < expressao.length; i++) {
@@ -43,18 +43,16 @@ public class Leitura {
                     || caractere == ')';
             
             if (caractere == '.' || caractere == ',') {
-                throw new ExpressaoInvalidaException("Só são aceitos números inteiros de 0 a 9, "
-                        + "sem vírgula ou ponto (posição " + (i + 1) + ").");
+                throw new ExpressaoIncorretaException("Só são aceitos números inteiros de 0 a 9, sem vírgula ou ponto.");
             }
             
             if (!caractereValido) {
-                throw new ExpressaoInvalidaException("Caractere inválido '" + caractere
-                        + "' na posição " + (i + 1) + " (contando sem os espaços).");
+                throw new ExpressaoIncorretaException("Caractere inválido.");
             }
         }
     }
 
-    public void validarParenteses(char[] expressao) throws ExpressaoInvalidaException {
+    public void validarParenteses(char[] expressao) throws ExpressaoIncorretaException {
         Pilha pilhaDeParenteses = new Pilha(expressao.length);
         
         for (int i = 0; i < expressao.length; i++) {
@@ -65,67 +63,59 @@ public class Leitura {
             }
             if (caractere == ')') {
                 if (pilhaDeParenteses.isEmpty()) {
-                    throw new ExpressaoInvalidaException("Parêntese de fechamento sem abertura "
-                            + "correspondente na posição " + (i + 1) + ".");
+                    throw new ExpressaoIncorretaException("Parêntese de fechamento sem abertura correspondente.");
                 }
                 pilhaDeParenteses.pop();
             }
         }
         
         if (!pilhaDeParenteses.isEmpty()) {
-            throw new ExpressaoInvalidaException("Existe parêntese de abertura sem fechamento.");
+            throw new ExpressaoIncorretaException("Existe parêntese de abertura sem fechamento.");
         }
     }
 
-    public void validarSequencia(char[] expressao) throws ExpressaoInvalidaException {
+    public void validarSequencia(char[] expressao) throws ExpressaoIncorretaException {
         boolean esperaOperando = true;
 
         for (int i = 0; i < expressao.length; i++) {
             char caractere = expressao[i];
-            int posicao = i + 1;
 
             if (regrasDosOperadores.isOperando(caractere)) {
                 if (!esperaOperando && regrasDosOperadores.isOperando(expressao[i - 1])) {
-                    throw new ExpressaoInvalidaException("Só são aceitos números de 1 dígito (0 a 9): "
-                            + "o número da posição " + (i + 1) + " tem mais de um dígito.");
+                    throw new ExpressaoIncorretaException("Só são aceitos números de 1 dígito (0 a 9).");
                 }
                 if (!esperaOperando) {
-                    throw new ExpressaoInvalidaException("Operando fora de posição: '" + caractere
-                            + "' na posição " + posicao + ".");
+                    throw new ExpressaoIncorretaException("Operando fora de posição.");
                 }
                 esperaOperando = false;
             }
 
             if (caractere == '(') {
                 if (!esperaOperando) {
-                    throw new ExpressaoInvalidaException("Parêntese de abertura fora de posição "
-                            + "na posição " + posicao + ".");
+                    throw new ExpressaoIncorretaException("Parêntese de abertura fora de posição.");
                 }
             }
 
             if (caractere == ')') {
                 if (esperaOperando) {
-                    throw new ExpressaoInvalidaException("Parêntese de fechamento fora de posição "
-                            + "na posição " + posicao + ".");
+                    throw new ExpressaoIncorretaException("Parêntese de fechamento fora de posição.");
                 }
             }
 
             if (regrasDosOperadores.isOperador(caractere)) {
                 if (esperaOperando) {
-                    throw new ExpressaoInvalidaException("Operador fora de posição: '" + caractere
-                            + "' na posição " + posicao + ".");
+                    throw new ExpressaoIncorretaException("Operador fora de posição.");
                 }
                 esperaOperando = true;
             }
         }
 
         if (esperaOperando) {
-            throw new ExpressaoInvalidaException("A expressão termina de forma incompleta.");
+            throw new ExpressaoIncorretaException("A expressão termina de forma incompleta.");
         }
     }
 
-    // Executa todas as validações e devolve a expressão pronta para ser convertida.
-    public char[] lerExpressao(String textoDigitado) throws ExpressaoInvalidaException {
+    public char[] lerExpressao(String textoDigitado) throws ExpressaoIncorretaException {
         char[] expressao = limparEntrada(textoDigitado);
         validarParenteses(expressao);
         validarSequencia(expressao);
