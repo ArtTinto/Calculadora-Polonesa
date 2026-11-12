@@ -60,22 +60,21 @@ public class Calculador {
         return resultado;
     }
 
-    public double avaliar(String[] expressaoPosfixa) throws ExpressaoIncorretaException {
-        Pilha pilhaDeValores = new Pilha(expressaoPosfixa.length);
+    public double avaliar(char[] expressaoPosfixa) throws ExpressaoIncorretaException {
+        Pilha<Double> pilhaDeValores = new Pilha<>(expressaoPosfixa.length);
 
         for (int i = 0; i < expressaoPosfixa.length; i++) {
-            String simbolo = expressaoPosfixa[i];
-            char primeiroCaractere = simbolo.charAt(0);
-            if (regrasDosOperadores.isOperando(primeiroCaractere)) {
-                pilhaDeValores.push(simbolo);
+            char simbolo = expressaoPosfixa[i];
+            if (regrasDosOperadores.isOperando(simbolo)) {
+                pilhaDeValores.push((double) (simbolo - '0'));
             } else {
-                double valorDireito = Double.parseDouble(pilhaDeValores.pop());
-                double valorEsquerdo = Double.parseDouble(pilhaDeValores.pop());
-                double resultadoParcial = executarOperacao(valorEsquerdo, valorDireito, primeiroCaractere);
-                pilhaDeValores.push(String.valueOf(resultadoParcial));
+                double valorDireito = pilhaDeValores.pop();
+                double valorEsquerdo = pilhaDeValores.pop();
+                double resultadoParcial = executarOperacao(valorEsquerdo, valorDireito, simbolo);
+                pilhaDeValores.push(resultadoParcial);
             }
         }
-        return Double.parseDouble(pilhaDeValores.pop());
+        return pilhaDeValores.pop();
     }
 
     private double dividir(double dividendo, double divisor) throws ExpressaoIncorretaException {
