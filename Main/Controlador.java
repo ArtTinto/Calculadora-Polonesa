@@ -1,6 +1,6 @@
 public class Controlador {
     private char[] expressaoInfixa;
-    private String[] expressaoPosfixa;
+    private char[] expressaoPosfixa;
     private double resultado;
 
     private final Leitor leitor;
