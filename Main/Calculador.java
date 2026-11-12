@@ -20,44 +20,9 @@ public class Calculador {
             return dividir(valorEsquerdo, valorDireito);
         }
         if (simboloDoOperador == '^') {
-            return calcularPotencia(valorEsquerdo, valorDireito);
+            return Math.pow(valorEsquerdo, valorDireito);
         }
         throw new ExpressaoIncorretaException("Operador desconhecido: " + simboloDoOperador);
-    }
-
-    private double calcularPotencia(double base, double expoente) throws ExpressaoIncorretaException {
-        if (expoente == 0) {
-            return 1;
-        }
-        if (base == 0 && expoente < 0) {
-            throw new ExpressaoIncorretaException("Divisão por zero (zero elevado a expoente negativo).");
-        }
-
-        double resultado;
-        if (expoente == Math.floor(expoente)) {
-            resultado = calcularPotenciaInteira(base, (long) Math.abs(expoente));
-            if (expoente < 0) {
-                resultado = 1 / resultado;
-            }
-        } else {
-            resultado = Math.pow(base, expoente);
-        }
-
-        return resultado;
-    }
-
-    private double calcularPotenciaInteira(double base, long expoente) {
-        double resultado = 1;
-        double baseAtual = base;
-        long expoenteRestante = expoente;
-        while (expoenteRestante > 0) {
-            if (expoenteRestante % 2 == 1) {
-                resultado = resultado * baseAtual;
-            }
-            baseAtual = baseAtual * baseAtual;
-            expoenteRestante = expoenteRestante / 2;
-        }
-        return resultado;
     }
 
     public double avaliar(char[] expressaoPosfixa) throws ExpressaoIncorretaException {
