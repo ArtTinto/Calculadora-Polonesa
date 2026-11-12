@@ -53,13 +53,13 @@ public class Leitor {
     }
 
     public void validarParenteses(char[] expressao) throws ExpressaoIncorretaException {
-        Pilha pilhaDeParenteses = new Pilha(expressao.length);
+        Pilha<Character> pilhaDeParenteses = new Pilha<>(expressao.length);
         
         for (int i = 0; i < expressao.length; i++) {
             char caractere = expressao[i];
             
             if (caractere == '(') {
-                pilhaDeParenteses.push(String.valueOf(caractere));
+                pilhaDeParenteses.push(caractere);
             }
             if (caractere == ')') {
                 if (pilhaDeParenteses.isEmpty()) {
