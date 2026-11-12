@@ -19,12 +19,7 @@ O resultado pode ter mais de um dígito e casas decimais (ex.: `7/2` dá `3.5`).
 
 ## Como usar
 
-Compile e execute:
-
-```
-javac *.java
-java Main
-```
+Execute:
 
 No menu, digite `1` para avaliar uma expressão ou `0` para sair.
 
@@ -39,10 +34,10 @@ Em caso de expressão inválida ou divisão por zero, o programa mostra uma mens
 ## Estrutura
 
 - `Main`: entrada e saída no console.
-- `Controle`: coordena as etapas.
-- `Leitura`: limpeza e validação da expressão.
-- `Conversor`: infixa para pós-fixa.
-- `Avaliador`: cálculo da pós-fixa.
-- `Operador`: precedência e associatividade.
-- `Pilha`: pilha própria sobre vetor.
-- `ExpressaoInvalidaException`: erros da expressão.
+- `Controlador`: coordena as etapas.
+- `Leitor`: limpeza e validação da expressão.
+- `ConversorPosfixo`: infixa para pós-fixa.
+- `Calculador`: cálculo da pós-fixa.
+- `Operadores`: precedência e associatividade.
+- `Pilha<T>`: pilha genérica própria sobre vetor.
+- `ExpressaoIncorretaException`: erros da expressão.
