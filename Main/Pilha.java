@@ -1,27 +1,28 @@
-public class Pilha {
-    private String[] elementos;
+public class Pilha<T> {
+    private T[] elementos;
     private int quantidadeDeElementos;
 
+    @SuppressWarnings("unchecked")
     public Pilha(int capacidade) {
-        elementos = new String[capacidade];
+        elementos = (T[]) new Object[capacidade];
         quantidadeDeElementos = 0;
     }
 
-    public void push(String valor) {
+    public void push(T valor) {
         lancarErroSeEstiverCheia();
         elementos[quantidadeDeElementos] = valor;
         quantidadeDeElementos = quantidadeDeElementos + 1;
     }
 
-    public String pop() {
+    public T pop() {
         lancarErroSeEstiverVazia();
         quantidadeDeElementos = quantidadeDeElementos - 1;
-        String valorRemovido = elementos[quantidadeDeElementos];
+        T valorRemovido = elementos[quantidadeDeElementos];
         elementos[quantidadeDeElementos] = null;
         return valorRemovido;
     }
 
-    public String peek() {
+    public T peek() {
         lancarErroSeEstiverVazia();
         return elementos[quantidadeDeElementos - 1];
     }
