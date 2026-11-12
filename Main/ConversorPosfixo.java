@@ -1,16 +1,16 @@
 public class ConversorPosfixo {
     private final Operadores regrasDosOperadores;
-    private Pilha pilhaDeOperadores;
-    private String[] saida;
+    private Pilha<Character> pilhaDeOperadores;
+    private char[] saida;
     private int tamanhoDaSaida;
 
     public ConversorPosfixo() {
         regrasDosOperadores = new Operadores();
     }
 
-    public String[] converter(char[] expressaoInfixa) {
-        pilhaDeOperadores = new Pilha(expressaoInfixa.length);
-        saida = new String[expressaoInfixa.length];
+    public char[] converter(char[] expressaoInfixa) {
+        pilhaDeOperadores = new Pilha<>(expressaoInfixa.length);
+        saida = new char[expressaoInfixa.length];
         tamanhoDaSaida = 0;
 
         for (int i = 0; i < expressaoInfixa.length; i++) {
@@ -30,26 +30,21 @@ public class ConversorPosfixo {
         return copiarSaida();
     }
 
-    private void adicionarNaSaida(String simbolo) {
+    private void adicionarNaSaida(char simbolo) {
         saida[tamanhoDaSaida] = simbolo;
         tamanhoDaSaida = tamanhoDaSaida + 1;
     }
 
-    // Lê o topo da pilha como caractere, para poder comparar com as regras dos operadores.
-    private char getSimboloDoTopo() {
-        return pilhaDeOperadores.peek().charAt(0);
-    }
-
     private void processarOperando(char operando) {
-        adicionarNaSaida(String.valueOf(operando));
+        adicionarNaSaida(operando);
     }
 
     private void processarAberturaDeParenteses() {
-        pilhaDeOperadores.push("(");
+        pilhaDeOperadores.push('(');
     }
 
     private void processarFechamentoDeParenteses() {
-        while (getSimboloDoTopo() != '(') {
+        while (pilhaDeOperadores.peek() != '(') {
             adicionarNaSaida(pilhaDeOperadores.pop());
         }
         pilhaDeOperadores.pop();
@@ -57,10 +52,10 @@ public class ConversorPosfixo {
 
     private void processarOperador(char operadorLido) {
         while (!pilhaDeOperadores.isEmpty()
-                && regrasDosOperadores.deveDesempilhar(operadorLido, getSimboloDoTopo())) {
+                && regrasDosOperadores.deveDesempilhar(operadorLido, pilhaDeOperadores.peek())) {
             adicionarNaSaida(pilhaDeOperadores.pop());
         }
-        pilhaDeOperadores.push(String.valueOf(operadorLido));
+        pilhaDeOperadores.push(operadorLido);
     }
 
     private void esvaziarPilhaNaSaida() {
@@ -69,8 +64,8 @@ public class ConversorPosfixo {
         }
     }
 
-    private String[] copiarSaida() {
-        String[] expressaoPosfixa = new String[tamanhoDaSaida];
+    private char[] copiarSaida() {
+        char[] expressaoPosfixa = new char[tamanhoDaSaida];
         for (int i = 0; i < tamanhoDaSaida; i++) {
             expressaoPosfixa[i] = saida[i];
         }
